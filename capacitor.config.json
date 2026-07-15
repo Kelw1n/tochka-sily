@@ -1,0 +1,11 @@
+{
+  "appId": "ru.kelwin.tochkasily",
+  "appName": "Точка Силы",
+  "webDir": "www",
+  "backgroundColor": "#000000",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#000000",
+    "scrollEnabled": true
+  }
+}

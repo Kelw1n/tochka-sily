@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>ТОЧКА СИЛЫ</title>
+<meta name="description" content="Трекер тренировок: 1ПМ калькулятор, программа, дневник и профиль с сохранением прогресса.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand" data-nav="home">
+      <span class="mark">&#9632;</span>
+      <span class="name">ТОЧКА СИЛЫ</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HOME -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Личный силовой трекер</div>
+        <h1 class="title">Каждый<br><span>подход</span><br>под контролем.</h1>
+        <p class="lede">Считай 1ПМ, веди программу жим/верх/низ, отмечай что сделал, а что пропустил — точка сама подскажет, как восполнить долг на следующей тренировке.</p>
+        <div class="cta-row">
+          <button class="btn" data-nav="calc">Узнать 1ПМ</button>
+          <button class="btn ghost" data-nav="diary">Открыть дневник</button>
+        </div>
+      </div>
+      <div class="plate-graphic">
+        <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="150" cy="150" r="120" stroke="#262626" stroke-width="2"/>
+          <circle cx="150" cy="150" r="95" stroke="rgb(255,100,45)" stroke-width="2"/>
+          <circle cx="150" cy="150" r="70" stroke="#262626" stroke-width="2"/>
+          <circle cx="150" cy="150" r="46" stroke="#262626" stroke-width="1"/>
+          <circle cx="150" cy="150" r="18" fill="rgb(255,100,45)"/>
+          <line x1="0" y1="150" x2="60" y2="150" stroke="#262626" stroke-width="10"/>
+          <line x1="240" y1="150" x2="300" y2="150" stroke="#262626" stroke-width="10"/>
+          <text x="150" y="245" text-anchor="middle" fill="rgb(150,150,150)" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">TOCHKA SILY</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stat-strip" id="home-stats">
+      <div class="cell"><div class="num" id="stat-1rm">—</div><div class="lbl">Текущий 1ПМ, кг</div></div>
+      <div class="cell"><div class="num" id="stat-sessions">0</div><div class="lbl">Тренировок в дневнике</div></div>
+      <div class="cell"><div class="num" id="stat-today">—</div><div class="lbl">Сегодня по плану</div></div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="view" id="view-calc">
+    <h2 class="section-title">Калькулятор 1ПМ</h2>
+    <p class="section-sub">Разовый максимум в жиме лёжа по формуле Эпли. Введи вес и число повторений в подходе — чем ближе к отказу, тем точнее.</p>
+
+    <div class="panel">
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Вес штанги, кг</label>
+          <input type="number" id="calc-weight" inputmode="decimal" placeholder="80">
+        </div>
+        <div class="field">
+          <label class="field-label">Повторений</label>
+          <input type="number" id="calc-reps" inputmode="numeric" placeholder="5">
+        </div>
+      </div>
+      <button class="btn" id="calc-run">Рассчитать</button>
+
+      <div class="readout" id="calc-result" style="display:none">
+        <div class="val" id="calc-val">—</div>
+        <div class="cap">Расчётный 1ПМ, кг</div>
+      </div>
+      <div class="backup-row" id="calc-actions" style="display:none">
+        <button class="btn small" id="calc-apply">Сохранить как текущий 1ПМ</button>
+      </div>
+    </div>
+
+    <div class="panel" id="calc-history-panel">
+      <div class="panel-title">История 1ПМ</div>
+      <div id="calc-history"></div>
+    </div>
+  </section>
+
+  <!-- BENCH PROGRESSION (14 sessions, generated from 1RM) -->
+  <section class="view" id="view-progression">
+    <h2 class="section-title">Жим — программа на 14 тренировок</h2>
+    <p class="section-sub">Построена от твоего 1ПМ, как в референсе: волна % от максимума, негативы после обычных подходов, проверочные тесты на 5, 7, 9 и 11 тренировках, попытка на новый рекорд на 14-й. Формулу процентов я собрал сам по образцу твоего скрина (тренировка 1 совпадает 1-в-1) — если пришлёшь точные проценты с сайта, подгоню под оригинал.</p>
+
+    <div class="warn-box" id="progression-no-1rm" style="display:none">
+      Сначала посчитай и сохрани 1ПМ на вкладке «Калькулятор» — программа строится от него.
+      <div class="backup-row" style="margin-top:10px"><button class="btn small" data-nav="calc">Перейти к калькулятору</button></div>
+    </div>
+
+    <div id="progression-controls" class="backup-row" style="margin-bottom:18px"></div>
+
+    <div class="day-tabs" id="progression-tabs"></div>
+    <div class="panel" id="progression-body"></div>
+  </section>
+
+  <!-- PROGRAM -->
+  <section class="view" id="view-program">
+
+    <h2 class="section-title">Программа</h2>
+    <p class="section-sub" id="program-sub">Твой сплит: понедельник и четверг — верх, вторник и пятница — низ. Среда, суббота, воскресенье — отдых.</p>
+
+    <div class="day-tabs" id="program-day-tabs"></div>
+    <div class="panel" id="program-body"></div>
+  </section>
+
+  <!-- DIARY -->
+  <section class="view" id="view-diary">
+    <h2 class="section-title">Дневник тренировок</h2>
+    <p class="section-sub">Отмечай, что сделал сегодня. Если пропустил упражнение или недобрал подходы — точка запомнит долг и подскажет, как восполнить в следующий раз.</p>
+
+    <div id="diary-debt-zone"></div>
+
+    <div class="day-tabs" id="diary-day-tabs"></div>
+    <div id="diary-body"></div>
+
+    <div class="panel" style="margin-top:20px">
+      <div class="panel-title">История дневника</div>
+      <div id="diary-history"></div>
+    </div>
+  </section>
+
+  <!-- EDITOR -->
+  <section class="view" id="view-editor">
+    <h2 class="section-title">Редактор плана</h2>
+    <p class="section-sub">Свой план для активного профиля. Хочешь дать другу использовать приложение под его программу — создай новый профиль и настрой план здесь.</p>
+
+    <div class="backup-row" style="margin-bottom:18px">
+      <button class="btn small ghost" id="editor-reset">Сбросить к стандартному плану</button>
+      <button class="btn small ghost" id="editor-export">Экспорт плана (.json)</button>
+      <button class="btn small ghost" id="editor-import-btn">Импорт плана (.json)</button>
+      <input type="file" id="editor-import-file" class="file-input-hidden" accept="application/json">
+    </div>
+
+    <div id="editor-days"></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="view" id="view-profile">
+    <h2 class="section-title">Профиль</h2>
+    <p class="section-sub">Без сервера прогресс живёт в этом браузере/приложении. Чтобы не потерять его при переустановке — регулярно скачивай резервную копию и восстанавливай её после установки.</p>
+
+    <div class="profile-select-row">
+      <select id="profile-select"></select>
+      <button class="btn small" id="profile-new">+ Новый профиль</button>
+      <button class="btn small ghost" id="profile-rename">Переименовать</button>
+      <button class="btn small danger" id="profile-delete">Удалить</button>
+    </div>
+
+    <div class="profile-card" id="profile-card"></div>
+
+    <div class="panel">
+      <div class="panel-title">Резервная копия</div>
+      <div class="warn-box"><b>Важно:</b> при удалении приложения/очистке браузера прогресс сотрётся. Скачай backup-файл и сохрани его (в облако, Файлы, Telegram избранное) — после переустановки загрузи его обратно и всё вернётся: все профили, 1ПМ, планы и дневник.</div>
+      <div class="backup-row">
+        <button class="btn" id="backup-export">Скачать резервную копию</button>
+        <button class="btn ghost" id="backup-import-btn">Восстановить из файла</button>
+        <input type="file" id="backup-import-file" class="file-input-hidden" accept="application/json">
+      </div>
+    </div>
+  </section>
+
+  <!-- RULES (accessible from home footer link) -->
+  <section class="view" id="view-rules">
+    <h2 class="section-title">Правила</h2>
+    <p class="section-sub">Общие принципы твоего сплита. Отредактируй под себя — правила зашиты как обычный текст в коде страницы.</p>
+    <ul class="rules-list">
+      <li><b>Разминка:</b> пустой гриф на 5–6 раз, добавил вес — 4–5 раз, ещё добавил — 2–3 раза. Дальше рабочие подходы.</li>
+      <li><b>Отдых в жиме:</b> строго 3–4 минуты между рабочими подходами. В остальных упражнениях — 2–3 минуты, в изоляции можно меньше.</li>
+      <li><b>Порядок:</b> тяжёлые базовые движения — в начале тренировки, пока есть силы. Суперсет бицепс/трицепс и предплечья — в конце.</li>
+      <li><b>Верх/низ через день:</b> понедельник и четверг — верх, вторник и пятница — низ. Среда, суббота, воскресенье — отдых и восстановление.</li>
+      <li><b>Прогрессия:</b> когда верхняя граница диапазона повторений даётся уверенно во всех подходах — добавляй вес на следующей тренировке этого типа.</li>
+      <li><b>Долг по подходам:</b> если пропустил упражнение или не добрал подходы — не пытайся всё нагнать за одну тренировку. Дневник сам предложит разумную добавку в следующий раз.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <a href="#" data-nav="rules">правила</a> · прогресс хранится локально — не забывай про backup
+</footer>
+
+<nav class="tabs bottom-nav">
+  <button data-nav="home" class="active"><span class="tab-ico">ГЛ</span><span class="tab-lbl">Главная</span></button>
+  <button data-nav="calc"><span class="tab-ico">1ПМ</span><span class="tab-lbl">Калькулятор</span></button>
+  <button data-nav="progression"><span class="tab-ico">14</span><span class="tab-lbl">Жим</span></button>
+  <button data-nav="program"><span class="tab-ico">ПР</span><span class="tab-lbl">Программа</span></button>
+  <button data-nav="diary"><span class="tab-ico">ДН</span><span class="tab-lbl">Дневник</span></button>
+  <button data-nav="editor"><span class="tab-ico">РЕД</span><span class="tab-lbl">Редактор</span></button>
+  <button data-nav="profile"><span class="tab-ico">ПРФ</span><span class="tab-lbl">Профиль</span></button>
+</nav>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
