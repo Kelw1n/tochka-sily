@@ -1,0 +1,9 @@
+{
+  "name": "Точка Силы",
+  "short_name": "Точка Силы",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait"
+}
